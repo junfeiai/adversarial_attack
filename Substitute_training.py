@@ -21,7 +21,9 @@ def reverse_scaling(x,min_value,max_value):
     unnorm_x = x*(max_value-min_value)+min_value
     return unnorm_x
 
+#loss for discrete model
 loss_object = tf.keras.losses.binary_crossentropy
+#for probabilistic model: tf.keras.losses.KLD
 def get_jacobian(input_data, input_label,origin_result):
     with tf.GradientTape() as g:
         #g.watch(input_data)
@@ -69,6 +71,8 @@ scaled_x = normalization(train_x).reshape([-1,60])
 #Query the oracle
 train_y_class = nilm_model.predict_classes(scaled_x)
 train_y_2_output = to_categorical(train_y_class)
+#for probabilistic model
+#train_y_prob_1 = nilm_model.predict_proba(norm_train_x)
 
 #3.Train the substitute 
 model.fit(scaled_x, train_y_2_output,epochs=1000, batch_size=None)
@@ -125,3 +129,4 @@ adv_test = nilm_model.predict_classes(adv_data_x.reshape([-1,60,1])).flatten()
 new_train_x = np.vstack([train_x.reshape([-1,60]),reverse_scaling(adv_data_x,-20000,20000)])
 df = pd.DataFrame(new_train_x)
 df.to_csv('query_data.csv')
+'''Model Extraction End'''
