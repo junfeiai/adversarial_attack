@@ -45,7 +45,7 @@ def create_adversarial_pattern(input_data, input_label,origin_result):
 original_training_x = np.zeros([5,60])
 
 #Load NILM model (the oracle model with discrete output)
-nilm_model = load_model('target_discrete.h5')
+nilm_model = load_model('target.h5')
 
 #define the substitute model
 model = Sequential()
@@ -78,7 +78,7 @@ train_y_2_output = to_categorical(train_y_class)
 model.fit(scaled_x, train_y_2_output,epochs=1000, batch_size=None)
 y_substitute_prob = model.predict_proba(scaled_x)
 y_class = model.predict_classes(scaled_x)
-model.save('/content/drive/My Drive/Phd/dataset/substitute.h5')
+model.save('substitute.h5')
 
 #4. New query data generating
 adv_data_x = None
